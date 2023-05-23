@@ -1,7 +1,7 @@
 {
-  "name": "@hodgef/ts-library-boilerplate-basic",
-  "version": "1.1.211",
-  "description": "Typescript Minimal Starter Kit for building libraries",
+  "name": "@epilogo/stringifyr",
+  "version": "1.0.0",
+  "description": "Stringifyr JS bundle",
   "main": "build/index.js",
   "types": "build/types/index.d.ts",
   "scripts": {
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hodgef/ts-library-boilerplate-basic"
+    "url": "https://github.com/enum1com/lib-stringifyr"
   },
-  "author": "Francisco Hodge <hello@franciscohodge.com> (https://github.com/hodgef)",
+  "author": "enum1 <hello@enum1.com> (https://github.com/enum1com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hodgef/ts-library-boilerplate-basic/issues"
+    "url": "https://github.com/enum1com/lib-stringifyr/issues"
   },
-  "homepage": "https://github.com/hodgef/ts-library-boilerplate-basic",
+  "homepage": "https://github.com/enum1com/lib-stringifyr",
   "keywords": [
     "library",
     "starter",
@@ -73,5 +73,10 @@
       "jsx",
       "node"
     ]
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.194",
+    "lodash": "^4.17.21",
+    "safe-stable-stringify": "^2.4.3"
   }
 }

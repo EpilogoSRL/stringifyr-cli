@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "noImplicitAny": true,
+      "noImplicitAny": false,
       "outDir": "build/types",
       "module": "esnext",
       "target": "es5",

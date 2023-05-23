@@ -13,7 +13,7 @@
 
 - Webpack 5
 - Babel 7
-- Hot reloading (`npm start`)
+- Hot reloading (`yarn start`)
 - Automatic Types file generation (index.d.ts)
 - UMD exports, so your library works everywhere.
 - Jest unit testing
