@@ -80,7 +80,7 @@
     "dompurify": "^3.0.3",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
-    "marked": "4.3.0",
+    "marked": "5.0.3",
     "safe-stable-stringify": "^2.4.3"
   }
 }
