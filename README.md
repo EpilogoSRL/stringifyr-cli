@@ -6,10 +6,14 @@ A polymorphic JS library for integrating with the [Stringifyr](https://stringify
 
 ```ts
 import * as React from 'react';
+import {StringifyrReact} from '@epilogo/stringifyr'
 
 export const Stringifyr = StringifyrReact({
-  apiKey: 'REQUIRED_API_KEY',
   react: { React },
+  apiKey: 'REQUIRED_API_KEY',
+  fetchOnLoadWithParams: {
+    fileSlug: 'OPTIONAL_FILE_SLUG'
+  },
 });
 ```
 
@@ -40,19 +44,19 @@ You can use `useNodeValue` to get all our blog posts in english
  *   },
  * }
  */
-const posts = Stringifyr.useNodeValue(`blog.en.{id}`);
+const posts = Stringifyr.useNodeValue(`blog.{lang=en}.{id}`);
 ```
 
 `useNodeValue` will return an object with keys whenever you provide an unresolved variable
 like `{lang}` or `{id}` and it will resolve the value when you define the variable. eg `blog.en`
   
 If you provide the full path to a node only the string value will be returned.
-E.g `blog.en.tutorial.title` will resolve to `How to use Stringifyr`.
+E.g `blog.{lang=en}.{id=tutorial}.title` will resolve to `How to use Stringifyr`.
 ```ts
 /**
  * tutorialContent = "How to use Stringifyr"
  */
-const tutorialContent = Stringifyr.useNodeValue(`blog.en.tutorial.title`);
+const tutorialContent = Stringifyr.useNodeValue(`blog.{lang=en}.{id=tutorial}.title`);
 ```
 
 ## Pure HTML / JS integration
@@ -73,8 +77,8 @@ Checkout the [Skypack docs](https://docs.skypack.dev/skypack-cdn/getting-started
 </script>
 <body>
 
-<-- "{sfyr=${blog.en.title}}" will be replaced with the related string value -->
-<div>{sfyr=${blog.en.title}}</div>
+<-- "{sfyr=blog.{lang=en}.title}" will be replaced with the related string value -->
+<div>{sfyr=blog.{lang=en}.title}</div>
 
 </body>
 </html>

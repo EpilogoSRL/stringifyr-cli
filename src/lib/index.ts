@@ -1,6 +1,6 @@
 import { Stringifyr as StringifyrGeneric } from "./stringifyr/Stringifyr";
-import { StringifyrDOM } from "./stringifyr/StringifyrDOM";
-import { StringifyrReact } from "./stringifyr/StringifyrReact";
+import { StringifyrDOM } from "./entry/StringifyrDOM";
+import { StringifyrReact } from "./entry/StringifyrReact";
 
 export const Stringifyr = {
   Stringifyr: StringifyrGeneric,

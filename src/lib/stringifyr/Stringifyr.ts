@@ -1,12 +1,10 @@
+import * as _ from 'lodash';
 import { Api, TString } from "./Api";
-import { TGraphNode } from "./parser/graphNode/makeInternalGraphNode";
-import { mergeInternalGraphNodesToCommonRoot } from "./parser/graphNode/mergeInternalGraphNodesToCommonRoot";
-import { reduceGraphNode } from "./parser/reduceGraphNode";
-import { selectGraphPath } from "./parser/selectGraphPath";
-import { IStorage } from "./IStorage";
-import { PersistLayer } from "./PersistLayer";
+import { IStorage } from "../utils/IStorage";
+import { PersistLayer } from "../utils/PersistLayer";
 import { configure } from 'safe-stable-stringify';
 import { getConfig } from "./Config";
+import { Sfyr } from "./Sfyr";
 
 const stringify = configure({
   bigint: true,
@@ -30,11 +28,11 @@ export type TLeafObject<T, X> = {
 
 type TFetchRootParams = {
   fileSlug?: string;
+  __incUnpublished?: boolean
 }
 
 type TRoot = {
   readonly response: Record<string, TString>;
-  readonly rootGraphNode: TGraphNode<TString>
   readonly reducedGraphNode: Record<string, Record<string, any> | string>
 }
 
@@ -57,7 +55,10 @@ export class Stringifyr {
     return result;
   }
 
-  private readonly params: TStringifyrParams;
+  private fetchParams: TFetchRootParams = {
+    fileSlug: Sfyr.DEFAULT_FILE_SLUG,
+    __incUnpublished: undefined
+  }
 
   private readonly api: Api;
   private readonly persist: PersistLayer;
@@ -71,20 +72,30 @@ export class Stringifyr {
   }
 
   constructor(params: TStringifyrParams) {
-    this.params = params;
-
     this.api = new Api({
-      apiKey: this.params.apiKey,
-      baseURL: this.params.baseURL ?? getConfig(this.params.isDev, 'baseURL'),
+      apiKey: params.apiKey,
+      baseURL: params.baseURL ?? getConfig(params.isDev, 'baseURL'),
     });
 
     this.persist = new PersistLayer({
-      storage: this.params.storage
+      storage: params.storage
     });
 
-    if (this.params.fetchOnLoadWithParams !== false) {
-      this.fetchRootCached(this.params.fetchOnLoadWithParams)
+    Object.assign(this.fetchParams, params.fetchOnLoadWithParams);
+
+    if (params.fetchOnLoadWithParams !== false) {
+      this.fetchRootCached()
     }
+  }
+
+  setFileSlug(fileSlug: string | undefined) {
+    this.fetchParams.fileSlug = !_.isEmpty(fileSlug) ? fileSlug : Sfyr.DEFAULT_FILE_SLUG;
+    return this;
+  }
+
+  setApiKey(apiKey: string | undefined) {
+    this.api.setParams({apiKey})
+    return this;
   }
 
   addListener(event: 'load', cb: () => void) {
@@ -106,12 +117,12 @@ export class Stringifyr {
     }
   }
 
-  async node(template: string): Promise<TString | null> {
-    return this.nodeSyncInternal(template, await this.fetchRootCached());
+  async node(template: string | undefined): Promise<TString | null> {
+    return this.nodeSyncInternal(template ?? '', await this.fetchRootCached());
   }
 
-  nodeSync(template: string): TString | null {
-    return this.nodeSyncInternal(template, this.lastRoot);
+  nodeSync(template: string | undefined): TString | null {
+    return this.nodeSyncInternal(template ?? '', this.lastRoot);
   }
 
   async waitForRoot() {
@@ -124,26 +135,27 @@ export class Stringifyr {
       return null;
     }
 
-    return selectGraphPath({
+    return Sfyr.selectGraphPath({
       node: root.reducedGraphNode,
       path: template,
     });
   }
 
-  private async fetchRootCached(fetchRootParams: TFetchRootParams = {}) {
-    const root = await this.persist.wrap(stringify(fetchRootParams), async (): Promise<TRoot> => {
-      const response = await this.api.stringGet();
-      const rootGraphNode = mergeInternalGraphNodesToCommonRoot(response);
-      const reducedGraphNode = reduceGraphNode({
-        nodes: rootGraphNode.children ?? [],
-        nodeToSegment: (node) => node.segmentPath,
-        nodeToChildren: (node) => node.children,
-        nodeToValue: (node) => node.value ?? '' as string
+  private async fetchRootCached() {
+    const root = await this.persist.wrap(stringify(this.fetchParams), async (): Promise<TRoot> => {
+      const response = await this.api.stringGet({
+        fileSlug: this.fetchParams.fileSlug,
+        __incUnpublished: this.fetchParams.__incUnpublished
       });
+      const reducedGraphNode = Sfyr.resolveFromPathToNode({
+        nodes: response,
+        nodeToValue(node) {
+          return node.value ?? null as string;
+        }
+      })
 
       return {
         response,
-        rootGraphNode,
         reducedGraphNode
       }
     })

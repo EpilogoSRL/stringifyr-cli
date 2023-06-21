@@ -1,6 +1,6 @@
-import { Stringifyr, TLeafObject, TStringifyrParams } from "./Stringifyr";
-import { TString } from "./Api";
-import { getConfig } from "./Config";
+import { Stringifyr, TLeafObject, TStringifyrParams } from "../stringifyr/Stringifyr";
+import { TString } from "../stringifyr/Api";
+import { getConfig } from "../stringifyr/Config";
 
 type TStringifyrReactParams = TStringifyrParams & {
   react?: {

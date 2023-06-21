@@ -1,5 +1,5 @@
 import { IStorage } from "./IStorage";
-import { AsyncReturnType } from "../Types";
+import { AsyncReturnType } from "./Types";
 
 type TPersistLayerParams = {
   storage?: IStorage

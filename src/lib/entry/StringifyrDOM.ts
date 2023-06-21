@@ -1,8 +1,8 @@
-import { Stringifyr, TStringifyrParams } from "./Stringifyr";
+import { Stringifyr, TStringifyrParams } from "../stringifyr/Stringifyr";
 import * as DOMPurify from 'dompurify'
 import * as marked from 'marked';
-import { TString } from "./Api";
-import { getConfig } from "./Config";
+import { TString } from "../stringifyr/Api";
+import { getConfig } from "../stringifyr/Config";
 
 type TStringifyrDOMParams = TStringifyrParams & {
   browser?: {
@@ -23,6 +23,8 @@ export function StringifyrDOM({
                                 },
                                 browser: {
                                   window: globalWindow = window,
+                                } = {
+                                  window: window,
                                 }
                               }: TStringifyrDOMParams) {
   const stringifyr = new Stringifyr({
