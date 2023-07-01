@@ -1,0 +1,3 @@
+build/*
+/**/*.d.ts
+src/lib/stringifyr/Sfyr.ts
