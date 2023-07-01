@@ -1,11 +1,13 @@
-import { Stringifyr as StringifyrGeneric } from "./stringifyr/Stringifyr";
-import { StringifyrDOM } from "./stringifyr/StringifyrDOM";
-import { StringifyrReact } from "./stringifyr/StringifyrReact";
+import { Stringifyr as _Stringifyr } from "./stringifyr/Stringifyr";
+import { StringifyrDOM as _StringifyrDOM } from "./entry/StringifyrDOM";
+import { StringifyrReact as _StringifyrReact } from "./entry/StringifyrReact";
 
-export const Stringifyr = {
-  Stringifyr: StringifyrGeneric,
-  StringifyrDOM,
-  StringifyrReact,
-}
+export const Stringifyr = _Stringifyr;
+export const StringifyrDOM = _StringifyrDOM;
+export const StringifyrReact = _StringifyrReact;
 
-export default Stringifyr;
+export default {
+  Stringifyr: _Stringifyr,
+  StringifyrDOM: _StringifyrDOM,
+  StringifyrReact: _StringifyrReact,
+};
