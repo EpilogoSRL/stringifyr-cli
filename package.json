@@ -73,7 +73,7 @@
   },
   "dependencies": {
     "@types/react": "^18.2.14",
-    "dompurify": "^3.0.3",
+    "dompurify": "^3.0.5",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "marked": "4.3.0",
